@@ -1,0 +1,25 @@
+.Elearning-overview-section {
+  background-color: orange;
+}
+
+.Elearning-overview-container {
+  background-color: yellowgreen;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.Elearning-overview-module {
+  background-color: teal;
+  margin: 10px; 
+  max-width: 250px;
+}
+
+.Elearning-overview-module img {
+  width: 250px;
+  height: auto;
+}
+
+.Elearning-overview-module h3 {
+  margin: 5px 0;
+}
