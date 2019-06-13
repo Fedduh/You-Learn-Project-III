@@ -1,0 +1,38 @@
+.youtube-player-div {
+  margin: 5px 0;
+  display: flex;
+}
+
+.question-container {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.question-bubble {
+  display: inline-block;
+  border-radius: 10px;
+  border: 1px solid green;
+  padding: 5px;
+  position: relative;
+}
+
+.question-bubble span {
+  visibility: hidden;
+  width: 120px;
+  background-color: rgb(0, 88, 5);
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 10px;
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+  width: 120px;
+  bottom: 110%;
+  left: 50%; 
+  margin-left: -60px;
+}
+
+.question-bubble:hover span {
+  visibility: visible; 
+}

@@ -21,6 +21,12 @@
   display: inline-block;
   padding: 5px;
   margin: 10px 0;
+  cursor: pointer;
+} 
+
+.width100 {
+  width: 100px;
+  text-align: center;
 }
 
 /* Images - start */
@@ -37,12 +43,12 @@ label {
 }
 
 input {
-  width: 100%;
+  width: 90%;
   margin: 5px 0;
 }
 
 textarea {
-  width: 100%;
+  width: 90%;
   margin: 5px 0;
 }
 

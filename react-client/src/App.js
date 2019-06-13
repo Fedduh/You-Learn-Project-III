@@ -24,6 +24,7 @@ class App extends Component {
       this.fetchUser();
     }
   }
+  
   fetchUser = () => {
     this.authService
       .isLoggedIn()
@@ -83,7 +84,7 @@ class App extends Component {
             exact
             path="/create"
             render={() => (
-              <CreateOverview currentUser={this.state.currentUser} />
+              <CreateOverview currentUser={this.state.currentUser} setCurrentUser={this.setCurrentUser}/>
             )}
             />
             <Route

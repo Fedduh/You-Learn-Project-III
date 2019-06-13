@@ -55,8 +55,8 @@ app.locals.title = "You-Learn";
 app.use(
   session({
     secret: process.env.APP_SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     store: new MongoStore({ mongooseConnection: mongoose.connection })
   })
 );
@@ -64,6 +64,7 @@ app.use(
 require("./passport")(app);
 
 app.use(cors({
+  credentials: true,
   origin: [process.env.CORS_ORIGIN]
 }))
 
@@ -72,6 +73,9 @@ app.use("/", index);
 
 const authRoutes = require("./routes/auth");
 app.use("/auth", authRoutes);
+
+const eLearningRoutes = require("./routes/elearning");
+app.use("/elearning", eLearningRoutes);
 
 module.exports = app;
  

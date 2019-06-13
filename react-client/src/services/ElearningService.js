@@ -25,7 +25,7 @@ class ElearningService {
         return elearnings.data;
       })
       .catch(err => {
-        console.log(err);
+        console.log('error is' , err); 
         return err.response.data;
       });
   };
@@ -61,6 +61,20 @@ class ElearningService {
       console.log(err);
       return err.response.data;
     });
+  }
+
+  addQuestion = (id, question, timeStart) => {
+      return this.service.post(`elearning/create/${id}/addquestion`, {
+        question: question,
+        timeStart: timeStart
+      })
+      .then(status => {
+        return status.data;
+      })
+      .catch(err => {
+        console.log(err);
+        return err.response.data;
+      });
   }
 
   getOneElearningById = id => {

@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import ElearningService from "../services/ElearningService";
 import AuthService from "../services/AuthService";
 
+import ErrorMessage from "./ErrorMessage";
+import LoginOrSignup from "./LoginOrSignup";
 import CreateElearning from "./CreateElearning";
 
 class CreateOverview extends Component {
@@ -10,7 +12,8 @@ class CreateOverview extends Component {
     elearnings: null,
     currentUser: null,
     message: null,
-    newElearning: false
+    newElearning: false,
+    error: null
   };
 
   elearningService = new ElearningService();
@@ -58,7 +61,12 @@ class CreateOverview extends Component {
 
   setElearnings = () => {
     this.elearningService.getCreatedByUser().then(elearnings => {
+      if (elearnings.message) {
+        this.setState({ error: elearnings.message });
+        return;
+      }
       this.setState({ elearnings: elearnings });
+      this.setState({error: null})
     });
   };
 
@@ -72,6 +80,12 @@ class CreateOverview extends Component {
     return (
       <section>
         <h2>E-learning modules created by you</h2>
+        {this.state.error && (
+          <div>
+            <ErrorMessage error={this.state.error} />
+            <LoginOrSignup setCurrentUser={this.props.setCurrentUser}/>
+          </div>
+        )}
         {this.state.elearnings &&
           this.state.elearnings.map(elearning => {
             return (

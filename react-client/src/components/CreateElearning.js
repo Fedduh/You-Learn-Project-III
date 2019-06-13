@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom"; // needed for this.history.props
 
 import ElearningService from "../services/ElearningService";
-import ErrorMessage from "./ErrorMessage.js";
+import ErrorMessage from "./ErrorMessage";
 import moment from "moment";
 
 class CreateNewElearning extends Component {

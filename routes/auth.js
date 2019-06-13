@@ -84,17 +84,18 @@ router.post("/signup", (req, res, next) => {
 // -- LOGOUT --
 router.get("/logout", (req, res) => {
   req.logout();
+  // req.clearCookie(); // logout() didn't always work
+  // req.session = null; 
   res.status(200).json({ message: "User logged out" });
 });
 
 // -- CHECK LOGIN STATUS --
 router.get("/isloggedin", (req, res, next) => {
   if (req.isAuthenticated()) {
-    req.user.password = null;
-    res.status(200).json(req.user);
+    res.status(200).json(req.user.username);
     return;
   }
-  res.status(200).json({ message: "User is not logged in" });
+  res.status(401).json({ message: "User is not logged in" });
 });
 
 module.exports = router;
