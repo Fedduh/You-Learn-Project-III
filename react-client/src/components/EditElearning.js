@@ -201,7 +201,7 @@ class EditElearning extends Component {
         this.setState({
           elearning: elearningWithQuestions,
           error: null,
-          changeQuestionStatus: null 
+          changeQuestionStatus: null
         });
       })
       .catch(err => {
@@ -247,6 +247,11 @@ class EditElearning extends Component {
   };
   // -- fake answers - end - //
 
+  handleSubmitAnswer = (e, answer) => {
+    e.preventDefault();
+    // no action (part of single question)
+  };
+
   render() {
     return (
       <div>
@@ -257,7 +262,12 @@ class EditElearning extends Component {
             <div className="youtube-player-div">
               <div id="youtube-player" className="youtube-video" />
               {/* Question screen */}
-              {this.state.showPreview && <SingleQuestion currentQuestion={this.state.currentQuestion} />}
+              {this.state.showPreview && (
+                <SingleQuestion
+                  currentQuestion={this.state.currentQuestion}
+                  handleSubmitAnswer={this.handleSubmitAnswer}
+                />
+              )}
             </div>
 
             {/* start - show created questions */}

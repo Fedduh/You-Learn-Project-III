@@ -21,7 +21,7 @@
   /* pointer-events: none;
   cursor: not-allowed; */
   background: green;
-  transition: 0.5s;
+  transition: background 2.5s;
   padding: 20px;
 }
 

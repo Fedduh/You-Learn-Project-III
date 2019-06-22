@@ -47,6 +47,10 @@ textarea {
   margin: 5px 0;
 }
 
+.explanation {
+  background-color: rgb(253, 204, 114);
+  padding: 5px;
+}
 /* Forms - end */
 
 
@@ -64,7 +68,7 @@ button {
   margin: 10px 0;
   cursor: pointer;
 } 
-
+ 
 .buttonRed {
   margin-right: 5px;
   padding: 0 5px;

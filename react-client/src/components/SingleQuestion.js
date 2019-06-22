@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import ErrorMessage from "./ErrorMessage";
+import AnswerExplanation from "./AnswerExplanation";
 
 class SingleQuestion extends Component {
   state = {
@@ -39,14 +41,14 @@ class SingleQuestion extends Component {
     }
   }
 
-  render() { 
+  render() {
     return (
       <div id="question-screen-youtube">
-        <form>
+        <form onSubmit={e => this.props.handleSubmitAnswer(e, this.state.selectedAnswer)}>
           <h3>{this.props.currentQuestion.question}</h3>
 
           {this.state.answerOptions &&
-            this.state.answerOptions.map((option, index) => { 
+            this.state.answerOptions.map((option, index) => {
               return (
                 <div key={index}>
                   <label>
@@ -54,14 +56,22 @@ class SingleQuestion extends Component {
                       className="radio-button"
                       type="radio"
                       name="answer-options"
-                      value={option} 
+                      value={option}
                       onChange={this.handleRadioChange}
+                      checked={this.state.selectedAnswer === option}
                     />
                     {option}
                   </label>
                 </div>
               );
             })}
+          <button type="submit" className="buttonOne">
+            save
+          </button>
+          {this.props.error && <ErrorMessage error={this.props.error} />}
+          {this.props.explanation && (
+            <AnswerExplanation explanation={this.props.explanation} playVideo={this.props.playVideo} />
+          )}
         </form>
       </div>
     );
