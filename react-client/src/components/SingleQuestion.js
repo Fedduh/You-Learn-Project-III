@@ -39,16 +39,14 @@ class SingleQuestion extends Component {
     }
   }
 
-  render() {
-    console.log(this.state.answerOptions);
+  render() { 
     return (
       <div id="question-screen-youtube">
         <form>
           <h3>{this.props.currentQuestion.question}</h3>
 
           {this.state.answerOptions &&
-            this.state.answerOptions.map((option, index) => {
-              console.log('option is', option)
+            this.state.answerOptions.map((option, index) => { 
               return (
                 <div key={index}>
                   <label>

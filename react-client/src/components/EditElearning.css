@@ -14,13 +14,19 @@
   right: 10px;
   left: 10px;
   width: calc(100% - 20px);
-  height: 80%;
+  height: calc(100% - 49px); 
+  /* 80%; */
+  overflow-y: auto;
   z-index: 2;
   /* pointer-events: none;
   cursor: not-allowed; */
   background: green;
   transition: 0.5s;
   padding: 20px;
+}
+
+#question-screen-youtube > form > h3 {
+  margin-top: 0;
 }
 
 #youtube-player {

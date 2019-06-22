@@ -44,13 +44,7 @@ class ElearningService {
   };
 
   createNewElearning = (state) => {
-    return this.service.post("/elearning", {
-      // youtube_url: state.youtube_url,
-      // youtube_img: state.youtube_img,
-      // youtube_title: state.youtube_title,
-      // youtube_category: state.youtube_category,
-      // youtube_description: state.youtube_description,
-      // youtube_duration: state.youtube_duration 
+    return this.service.post("/elearning", { 
       state
     })
     .then(result => {

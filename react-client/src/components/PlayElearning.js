@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import elearningService from "../services/ElearningService";
 import ErrorMessage from "./ErrorMessage";
 import SingleQuestion from "./SingleQuestion";
+import ElearningQuestionBubble from "./ElearningQuestionBubble"; 
 
 class PlayElearning extends Component {
   state = {
@@ -9,7 +10,8 @@ class PlayElearning extends Component {
     elearning: null,
     id: null,
     error: null,
-    playerStatus: null
+    playerStatus: null,
+    showQuestion: false
   };
 
   ElearningService = new elearningService();
@@ -53,7 +55,7 @@ class PlayElearning extends Component {
       height: 390, // standard
       playerVars: {
         fs: 0, // disable fullscreen
-        controls: 0, // hide controls
+        // controls: 0, // hide controls
         modestbranding: 1 // smaller logo
       },
       events: {
@@ -64,16 +66,14 @@ class PlayElearning extends Component {
   };
 
   onPlayerReady = e => {
+    // e.target.style.touchAction = 'initial';
     e.target.playVideo();
   };
 
-  // playing? hide preview
-  onPlayerStateChange = e => { 
-    if (e.data === 2) { 
-      this.setState({ playerStatus: "paused" });
-    }
-    if (e.data === 1) { 
-      this.setState({ playerStatus: "playing" }); 
+  onPlayerStateChange = e => {
+    if (e.data === 1) {
+      // playing -> hide question / preview
+      this.setState({ showQuestion: false });
     }
   };
 
@@ -83,6 +83,14 @@ class PlayElearning extends Component {
 
   playOrPause = () => {
     this.state.playerStatus === "playing" ? this.player.pauseVideo() : this.player.playVideo();
+  }
+
+  showQuestionForm = question => {
+      // go to timeStart (seekTo - true to also seek unbuffered) and pause there
+      this.player.seekTo(question.timeStart, true);
+      this.player.pauseVideo();
+      // show preview question and edit form for this question
+      this.setState({  currentQuestion: question, showQuestion: true });
   }
 
   render() {
@@ -95,11 +103,30 @@ class PlayElearning extends Component {
             <div className="youtube-player-div">
               <div id="youtube-player" className="youtube-video" />
               {/* Question screen */}
-              {this.state.showPreview && <SingleQuestion currentQuestion={this.state.currentQuestion} />}
+              {this.state.showQuestion && <SingleQuestion currentQuestion={this.state.currentQuestion} />}
             </div>
-            <div className="buttonOne" onClick={this.playOrPause}>
+            {/* <div className="buttonOne" onClick={this.playOrPause}>
               {this.state.playerStatus === "paused" ? "play" : "pause"}
-            </div>
+            </div> */}
+
+             {/* start - show created questions */}
+             {this.state.elearning.questions.length >= 1 && (
+              <div className="question-container">
+                {this.state.elearning.questions.map((question, index) => {
+                  return (
+                    <ElearningQuestionBubble
+                      key={question._id}
+                      question={question}
+                      index={index}
+                      showQuestionForm={this.showQuestionForm}
+                      videoLength={this.state.elearning.youtube_duration_seconds}
+                    />
+                  );
+                })}
+              </div>
+            )}
+            {/* end - show created questions */}
+
           </section>
         )}
       </div>

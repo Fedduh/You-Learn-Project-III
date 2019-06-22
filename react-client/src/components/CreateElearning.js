@@ -15,7 +15,8 @@ class CreateNewElearning extends Component {
     youtube_title: "",
     youtube_category: "",
     youtube_description: "",
-    youtube_duration: "" // minutes
+    youtube_duration: "", // minutes
+    youtube_duration_seconds: ""
   };
 
   elearningService = new ElearningService();
@@ -44,18 +45,15 @@ class CreateNewElearning extends Component {
         } else {
           // success
           document.getElementById("youtube_url").disabled = true;
-          this.setState({ error_form_one: null });
-          this.setState({ youtube_object_set: true }); // optional (!)
           this.setState({
-            youtube_img: result.snippet.thumbnails.standard.url
-          });
-          this.setState({ youtube_title: result.snippet.title });
-          this.setState({ youtube_category: result.snippet.categoryName });
-          this.setState({
-            youtube_description: result.snippet.description.substring(0, 500)
-          });
-          this.setState({
-            youtube_duration: this.convertTimeToMinutes(result.contentDetails.duration)
+            error_form_one: null,
+            youtube_object_set: true,
+            youtube_img: result.snippet.thumbnails.standard.url,
+            youtube_title: result.snippet.title,
+            youtube_category: result.snippet.categoryName,
+            youtube_description: result.snippet.description.substring(0, 500),
+            youtube_duration: this.convertTimeToMinutes(result.contentDetails.duration),
+            youtube_duration_seconds: this.convertTimeToSeconds(result.contentDetails.duration)
           });
           console.log("received", result);
         }
@@ -99,6 +97,17 @@ class CreateNewElearning extends Component {
       duration += timeObject._data.hours * 60;
     }
     duration += timeObject._data.minutes;
+    return duration;
+  };
+
+  convertTimeToSeconds = timeInput => {
+    const timeObject = moment.duration(timeInput);
+    let duration = 0;
+    if (timeObject._data.hours > 0) {
+      duration += timeObject._data.hours * 3600;
+    }
+    duration += timeObject._data.minutes * 60;
+    duration += timeObject._data.seconds;
     return duration;
   };
 

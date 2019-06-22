@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import elearningService from "../services/ElearningService";
 import ErrorMessage from "./ErrorMessage";
 
-import ElearningQuestionBuble from "./ElearningQuestionBuble";
+import ElearningQuestionBubble from "./ElearningQuestionBubble";
 import SingleQuestion from "./SingleQuestion";
 
 import "./EditElearning.css";
@@ -81,15 +81,8 @@ class EditElearning extends Component {
 
   // playing? hide preview
   onPlayerStateChange = e => {
-    console.log(e.data);
-    console.log(this.player);
-    if (e.data === 2) {
-      // pause
-      console.log("video is paused"); 
-    }
     if (e.data === 1) {
-      // playing
-      console.log("video is playing");
+      // playing -> hide question / preview
       this.setState({ showPreview: false });
     }
   };
@@ -161,10 +154,11 @@ class EditElearning extends Component {
   // -- click events & event handlers - end -- //
 
   // -- show & submit forms - start - //
-  showEditForm = question => {
+  showQuestionForm = question => {
     // go to timeStart (seekTo - true to also seek unbuffered) and pause there
     this.player.seekTo(question.timeStart, true);
     this.player.pauseVideo();
+    // show preview question and edit form for this question
     this.setState({ changeQuestionStatus: "edit", currentQuestion: question, showPreview: true });
   };
 
@@ -271,12 +265,12 @@ class EditElearning extends Component {
               <div className="question-container">
                 {this.state.elearning.questions.map((question, index) => {
                   return (
-                    <ElearningQuestionBuble
+                    <ElearningQuestionBubble
                       key={question._id}
                       question={question}
                       index={index}
-                      showEditForm={this.showEditForm}
-                      videoLength={this.state.elearning.youtube_duration}
+                      showQuestionForm={this.showQuestionForm}
+                      videoLength={this.state.elearning.youtube_duration_seconds}
                     />
                   );
                 })}

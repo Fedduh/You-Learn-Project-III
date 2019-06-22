@@ -1,17 +1,17 @@
-import React from "react"; 
+import React from "react";
 
-const ElearningQuestionBuble = props => {
-  var divStyle = { 
-    left:  ((props.question.timeStart / (props.videoLength * 60) ) * 100) + '%',
-    position: 'absolute'
-  }; 
+const ElearningQuestionBubble = props => {
+  var divStyle = {
+    left: (props.question.timeStart / props.videoLength) * 100 + "%",
+    position: "absolute"
+  };
 
   return (
     <div
       key={props.question._id}
       className="question-bubble"
       style={divStyle}
-      onClick={() => props.showEditForm(props.question)}
+      onClick={() => props.showQuestionForm(props.question)}
     >
       Q{props.index + 1}
       <span>
@@ -23,4 +23,4 @@ const ElearningQuestionBuble = props => {
   );
 };
 
-export default ElearningQuestionBuble;
+export default ElearningQuestionBubble;
