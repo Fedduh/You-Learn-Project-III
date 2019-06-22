@@ -63,10 +63,9 @@ class ElearningService {
     });
   }
 
-  addQuestion = (id, question, timeStart) => {
+  addQuestion = (id, questionObject) => {
       return this.service.post(`elearning/create/${id}/addquestion`, {
-        question: question,
-        timeStart: timeStart
+        questionObject
       })
       .then(status => {
         return status.data;
@@ -75,6 +74,32 @@ class ElearningService {
         console.log(err);
         return err.response.data;
       });
+  }
+
+  editQuestion = (id, questionObject) => {
+    return this.service.post(`elearning/create/${id}/editquestion/${questionObject._id}`, {
+      questionObject
+    })
+    .then(status => {
+      return status.data;
+    })
+    .catch(err => {
+      console.log(err);
+      return err.response.data;
+    });
+  }
+
+  deleteQuestion = (id, questionObject) => {
+    return this.service.post(`elearning/create/${id}/deletequestion/${questionObject._id}`, {
+      questionObject
+    })
+    .then(status => {
+      return status.data;
+    })
+    .catch(err => {
+      console.log(err);
+      return err.response.data;
+    });
   }
 
   getOneElearningById = id => {

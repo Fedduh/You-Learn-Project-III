@@ -14,15 +14,6 @@
   padding-bottom: 60px; 
 }
 
-.buttonOne {
-  background-color: rgb(56, 56, 56);
-  color: white;
-  border-radius: 10px;
-  display: inline-block;
-  padding: 5px;
-  margin: 10px 0;
-  cursor: pointer;
-} 
 
 .width100 {
   width: 100px;
@@ -47,15 +38,46 @@ input {
   margin: 5px 0;
 }
 
+.radio-button {
+  width: auto;
+}
+
 textarea {
   width: 90%;
   margin: 5px 0;
 }
 
+/* Forms - end */
+
+
+/* Buttons - start */
 button {
   margin: 5px 0;
 }
-/* Forms - end */
+
+.buttonOne {
+  background-color: rgb(56, 56, 56);
+  color: white;
+  border-radius: 10px;
+  display: inline-block;
+  padding: 5px;
+  margin: 10px 0;
+  cursor: pointer;
+} 
+
+.buttonRed {
+  margin-right: 5px;
+  padding: 0 5px;
+  background-color: rgb(236, 113, 113);
+}
+/* Buttons - end */
+
+
+/* Buttons - start */
+button {
+  display: block;
+}
+/* Buttons - end */
 
 footer {
   position: absolute;

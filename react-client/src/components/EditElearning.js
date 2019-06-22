@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import elearningService from "../services/ElearningService";
-import ErrorMessage from "./ErrorMessage.js";
+import ErrorMessage from "./ErrorMessage";
+
+import ElearningQuestionBuble from "./ElearningQuestionBuble";
+import SingleQuestion from "./SingleQuestion";
 
 import "./EditElearning.css";
 
@@ -10,9 +13,16 @@ class EditElearning extends Component {
     elearning: null,
     id: null,
     error: null,
-    timeStart: "",
-    question: "",
-    showAddQuestion: false
+    errorForm: null,
+    showPreview: false,
+    changeQuestionStatus: null, // null, 'edit', 'new'
+    currentQuestion: {
+      _id: "",
+      timeStart: "",
+      question: "",
+      answer: "",
+      answerfakes: ["", ""]
+    }
   };
 
   ElearningService = new elearningService();
@@ -28,7 +38,6 @@ class EditElearning extends Component {
           return;
         }
         this.setState({ elearning: elearning });
-        console.log(this.state.elearning);
         // load youtube object
         if (!window.YT) {
           // If not, load the script asynchronously
@@ -36,11 +45,8 @@ class EditElearning extends Component {
           tag.src = "https://www.youtube.com/iframe_api";
           const firstScriptTag = document.getElementsByTagName("script")[0];
           firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
           // onYouTubeIframeAPIReady will load the video after the script is loaded
           window.onYouTubeIframeAPIReady = this.loadVideo;
-
-          console.log(window.YT);
         } else {
           // If script is already there, load the video directly
           this.loadVideo();
@@ -54,7 +60,6 @@ class EditElearning extends Component {
 
   loadVideo = () => {
     this.player = new window.YT.Player("youtube-player", {
-      // options
       videoId: this.state.elearning.youtube_url,
       width: 640, // standard
       height: 390, // standard
@@ -71,20 +76,21 @@ class EditElearning extends Component {
   };
 
   onPlayerReady = e => {
-    // e.target.playVideo();
-    console.log("start playing");
+    e.target.playVideo();
   };
 
+  // playing? hide preview
   onPlayerStateChange = e => {
     console.log(e.data);
     console.log(this.player);
     if (e.data === 2) {
-      console.log("video is paused");
+      // pause
+      console.log("video is paused"); 
     }
     if (e.data === 1) {
+      // playing
       console.log("video is playing");
-
-      console.log(this.player.getCurrentTime());
+      this.setState({ showPreview: false });
     }
   };
 
@@ -92,31 +98,37 @@ class EditElearning extends Component {
     this.player.pauseVideo();
   };
 
-  // click events
+  // -- click events & event handlers - start -- //
   createQuestion = e => {
-    console.log("pressed - create question");
+    // clicking  "create new question at this time"
+    // pause and set timeStart equeal to video pause time
     this.player.pauseVideo();
-      this.setState({ showAddQuestion: true, timeStart: Math.ceil(this.player.getCurrentTime()) });
+    this.setState(prevState => ({
+      changeQuestionStatus: "new",
+      currentQuestion: {
+        ...prevState.currentQuestion,
+        _id: "",
+        timeStart: Math.ceil(this.player.getCurrentTime()),
+        question: "",
+        answer: "",
+        answerfakes: ["", "", ""]
+      }
+    }));
   };
 
-  // form handlers
-  changeHandler = e => {
-    const name = e.target.name;
-    const value = e.target.value;
-    this.setState({ [name]: value });
-  };
-
-  handleNewFormSubmit = e => {
-    e.preventDefault();
-    this.ElearningService.addQuestion(this.props.id, this.state.question, this.state.timeStart)
+  deleteQuestion = e => {
+    this.ElearningService.deleteQuestion(this.state.id, this.state.currentQuestion)
       .then(elearningWithQuestions => {
         if (elearningWithQuestions.message) {
           this.setState({ error: elearningWithQuestions.message });
           return;
         }
-        console.log("client", elearningWithQuestions);
-        this.setState({ elearning: elearningWithQuestions });
-        this.setState({ error: null });
+        this.setState({
+          elearning: elearningWithQuestions,
+          error: null,
+          changeQuestionStatus: null,
+          showPreview: false
+        });
       })
       .catch(err => {
         console.log(err);
@@ -124,20 +136,134 @@ class EditElearning extends Component {
       });
   };
 
+  changeHandlerCurrentQuestion = e => {
+    const name = e.target.name;
+    const value = e.target.value;
+    this.setState(prevState => ({
+      currentQuestion: {
+        ...prevState.currentQuestion, // keep all other key-value pairs
+        [name]: value
+      }
+    }));
+  };
+
+  changeHandlerFakeAnswers = (index, e) => {
+    const newValue = e.target.value;
+    const updatedArray = [...this.state.currentQuestion.answerfakes];
+    updatedArray[index] = newValue;
+    this.setState(prevState => ({
+      currentQuestion: {
+        ...prevState.currentQuestion, // keep all other key-value pairs
+        answerfakes: updatedArray
+      }
+    }));
+  };
+  // -- click events & event handlers - end -- //
+
+  // -- show & submit forms - start - //
+  showEditForm = question => {
+    // go to timeStart (seekTo - true to also seek unbuffered) and pause there
+    this.player.seekTo(question.timeStart, true);
+    this.player.pauseVideo();
+    this.setState({ changeQuestionStatus: "edit", currentQuestion: question, showPreview: true });
+  };
+
+  handleSubmit = e => {
+    this.setState({
+      errorForm: null
+    });
+    this.state.changeQuestionStatus === "new" ? this.handleNewFormSubmit(e) : this.handleEditFormSubmit(e);
+  };
+
+  handleNewFormSubmit = e => {
+    e.preventDefault();
+    this.ElearningService.addQuestion(this.state.id, this.state.currentQuestion)
+      .then(elearningWithQuestions => {
+        if (elearningWithQuestions.message) {
+          this.setState({ error: elearningWithQuestions.message });
+          return;
+        }
+        this.setState({
+          elearning: elearningWithQuestions,
+          error: null,
+          changeQuestionStatus: null,
+          showPreview: true // the current question is already in the state
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({ error: "something went wrong" });
+      });
+  };
+
+  handleEditFormSubmit = e => {
+    e.preventDefault();
+    this.ElearningService.editQuestion(this.state.id, this.state.currentQuestion)
+      .then(elearningWithQuestions => {
+        if (elearningWithQuestions.message) {
+          this.setState({ error: elearningWithQuestions.message });
+          return;
+        }
+        this.setState({
+          elearning: elearningWithQuestions,
+          error: null,
+          changeQuestionStatus: null 
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({ error: "something went wrong" });
+      });
+  };
+  // -- show & submit forms - start - //
+
+  // -- fake answers - start - //
+  addFakeAnswer = () => {
+    var updatedArray = this.state.currentQuestion.answerfakes;
+    switch (updatedArray.length) {
+      case 0:
+        updatedArray = [""];
+        break;
+      case 5:
+        this.setState({
+          errorForm: "maximum of 5 false answers"
+        });
+        break;
+      default:
+        updatedArray = [...this.state.currentQuestion.answerfakes, ""];
+    }
+
+    this.setState(prevState => ({
+      currentQuestion: {
+        ...prevState.currentQuestion,
+        answerfakes: updatedArray
+      }
+    }));
+  };
+
+  deleteFakeAnswer = index => {
+    const updatedArray = [...this.state.currentQuestion.answerfakes];
+    updatedArray.splice(index, 1);
+    this.setState(prevState => ({
+      currentQuestion: {
+        ...prevState.currentQuestion,
+        answerfakes: updatedArray
+      }
+    }));
+  };
+  // -- fake answers - end - //
+
   render() {
     return (
       <div>
         {this.state.error && <ErrorMessage error={this.state.error} />}
         {this.state.elearning && (
           <section>
-            <h2>{this.state.elearning.title}</h2>
+            <h2>Elearning module: {this.state.elearning.title}</h2>
             <div className="youtube-player-div">
               <div id="youtube-player" className="youtube-video" />
-            </div>
-
-            {/* Button add question */}
-            <div className="buttonOne" onClick={this.createQuestion}>
-              add question
+              {/* Question screen */}
+              {this.state.showPreview && <SingleQuestion currentQuestion={this.state.currentQuestion} />}
             </div>
 
             {/* start - show created questions */}
@@ -145,36 +271,82 @@ class EditElearning extends Component {
               <div className="question-container">
                 {this.state.elearning.questions.map((question, index) => {
                   return (
-                    <div key={question._id} className="question-bubble">
-                      Q{index + 1}
-                      <span>@ {question.timeStart} sec</span>
-                    </div>
+                    <ElearningQuestionBuble
+                      key={question._id}
+                      question={question}
+                      index={index}
+                      showEditForm={this.showEditForm}
+                      videoLength={this.state.elearning.youtube_duration}
+                    />
                   );
                 })}
               </div>
             )}
             {/* end - show created questions */}
 
-            {/* start - Add new question - form */}
-            {this.state.showAddQuestion && (
-              <form onSubmit={this.handleNewFormSubmit}>
+            {/* Button add question */}
+            <div className="buttonOne" onClick={this.createQuestion}>
+              add question at current time
+            </div>
+
+            {/* start - Add or edit question - form */}
+            {this.state.changeQuestionStatus &&
+              (this.state.changeQuestionStatus === "new" ? (
+                <h2>Add new question</h2>
+              ) : (
+                <h2>Edit question</h2>
+              ))}
+            {this.state.changeQuestionStatus && (
+              <form onSubmit={this.handleSubmit} id="question-form">
                 <label>Time start in seconds</label>
                 <input
                   type="number"
                   name="timeStart"
                   required={true}
-                  value={this.state.timeStart}
-                  onChange={this.changeHandler}
+                  value={this.state.currentQuestion.timeStart}
+                  onChange={this.changeHandlerCurrentQuestion}
                 />
                 <label>Question</label>
                 <input
                   type="text"
                   name="question"
                   required={true}
-                  // value={this.state.question}
-                  onChange={this.changeHandler}
+                  value={this.state.currentQuestion.question}
+                  onChange={this.changeHandlerCurrentQuestion}
                 />
+                <label>Answer</label>
+                <input
+                  type="text"
+                  name="answer"
+                  required={true}
+                  value={this.state.currentQuestion.answer}
+                  onChange={this.changeHandlerCurrentQuestion}
+                />
+                <label>False answers</label>
+                {this.state.currentQuestion.answerfakes &&
+                  this.state.currentQuestion.answerfakes.map((answer, index) => (
+                    <div key={index}>
+                      <div className="buttonOne buttonRed" onClick={() => this.deleteFakeAnswer(index)}>
+                        x
+                      </div>
+                      <input
+                        value={this.state.currentQuestion.answerfakes[index]}
+                        type="text"
+                        onChange={e => this.changeHandlerFakeAnswers(index, e)}
+                      />
+                    </div>
+                  ))}
+                <div className="buttonOne" onClick={this.addFakeAnswer}>
+                  add false answer option
+                </div>
+                {this.state.errorForm && <ErrorMessage error={this.state.errorForm} />}
                 <button type="submit">save question</button>
+                {/* If edit , show delete question */}
+                {this.state.changeQuestionStatus === "edit" && (
+                  <div className="buttonOne buttonRed" onClick={this.deleteQuestion}>
+                    delete question
+                  </div>
+                )}
               </form>
             )}
             {/* end - Add new question - form */}

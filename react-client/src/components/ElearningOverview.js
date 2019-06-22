@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import ElearningService from "../services/ElearningService";
-import "./ElearningOverview.css"
+import "./ElearningOverview.css";
 
 class ElearningOverview extends Component {
   state = {
@@ -27,11 +28,10 @@ class ElearningOverview extends Component {
             {this.state.elearnings.map(elearning => {
               return (
                 <div className="Elearning-overview-module" key={elearning._id}>
-                  <h3>{elearning.title}</h3>
-                  <img
-                    src={elearning.youtube_img}
-                    alt="elearning thumbnail"
-                  />
+                  <Link to={`/play/${elearning._id}`}>
+                    <h3>{elearning.title}</h3>
+                    <img src={elearning.youtube_img} alt="elearning thumbnail" />
+                  </Link>
                 </div>
               );
             })}

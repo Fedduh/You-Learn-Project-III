@@ -6,6 +6,8 @@ import Profile from "./components/Profile";
 import ElearningOverview from "./components/ElearningOverview";
 import CreateOverview from "./components/CreateOverview";
 import EditElearning from "./components/EditElearning"
+import PlayElearning from "./components/PlayElearning"
+
 // import Footer from "./components/Footer";
 import { Switch, Route } from "react-router-dom";
 
@@ -95,7 +97,18 @@ class App extends Component {
               <EditElearning currentUser={this.state.currentUser} id={match.params.id}/>
             )}
             />
-            {/* Create - start */}
+            {/* Create - end */}
+
+            {/* Play -start */}
+            <Route
+            exact
+            path="/play/:id"
+            // pass id from match in props
+            render={({match}) => (
+              <PlayElearning currentUser={this.state.currentUser} id={match.params.id}/>
+            )}
+            />
+            {/* Play - end */}
         </Switch>
 
         {/* <Footer /> */}
