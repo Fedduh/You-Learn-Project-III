@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+import LoginOrSignup from "./LoginOrSignup";
 import elearningService from "../services/ElearningService";
+import userService from "../services/UserService";
 import ErrorMessage from "./ErrorMessage";
 import SingleQuestion from "./SingleQuestion";
 import ElearningQuestionBubble from "./ElearningQuestionBubble";
@@ -13,17 +15,27 @@ class PlayElearning extends Component {
     playerStatus: null,
     showQuestion: false,
     currentQuestion: null,
-    answersGiven: [],
     errorAnswer: null,
     explanation: null
   };
 
+  UserService = new userService();
   ElearningService = new elearningService();
 
-  // (copy from editElearning.js)
   componentDidMount() {
-    this.setState({ id: this.props.id });
-    this.setState({ currentUser: this.props.currentUser }); // not working?
+    this.setElearning();
+  }
+
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.currentUser !== prevProps.currentUser) {
+      this.setElearning();
+    }
+  }
+
+  // (copy from editElearning.js) (still in componentdidmount there)
+  setElearning = () => {
+    this.setState({ id: this.props.id, currentUser: this.props.currentUser });
     // load the elearning from db
     this.ElearningService.getOneElearningById(this.props.id)
       .then(elearning => {
@@ -33,23 +45,29 @@ class PlayElearning extends Component {
         }
         this.setState({ elearning: elearning });
         // load youtube object
-        if (!window.YT) {
-          // If not, load the script asynchronously
-          const tag = document.createElement("script");
-          tag.src = "https://www.youtube.com/iframe_api";
-          const firstScriptTag = document.getElementsByTagName("script")[0];
-          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-          // onYouTubeIframeAPIReady will load the video after the script is loaded
-          window.onYouTubeIframeAPIReady = this.loadVideo;
-        } else {
-          // If script is already there, load the video directly
-          this.loadVideo();
-        }
+        this.loadYoutubeObject(); 
+        // remove errors
+        this.setState({ error: null });
       })
       .catch(err => {
         console.log(err);
         this.setState({ error: "something went wrong" });
       });
+  };
+
+  loadYoutubeObject = () => {
+    if (!window.YT) {
+      // If not, load the script asynchronously
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName("script")[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      // onYouTubeIframeAPIReady will load the video after the script is loaded
+      window.onYouTubeIframeAPIReady = this.loadVideo;
+    } else {
+      // If script is already there, load the video directly
+      this.loadVideo();
+    }
   }
 
   loadVideo = () => {
@@ -69,8 +87,7 @@ class PlayElearning extends Component {
     });
   };
 
-  onPlayerReady = e => {
-    // e.target.style.touchAction = 'initial';
+  onPlayerReady = e => { 
     e.target.playVideo();
   };
 
@@ -81,8 +98,7 @@ class PlayElearning extends Component {
       this.calcTimeToNextQuestion();
     }
     if (e.data === 2) {
-      // pausing / manual pause
-      console.log("paused");
+      // pausing / manual pause -> clear timeout
       clearTimeout(this.timer);
     }
   };
@@ -100,31 +116,20 @@ class PlayElearning extends Component {
     const remainingSeconds = (NextQuestion.timeStart - currentTime) / playbackRate;
     const stopPlayingAt = () => {
       this.timer = window.setTimeout(() => this.showQuestionForm(NextQuestion), remainingSeconds * 1000);
-      console.log("remaining time is", remainingSeconds);
     };
     stopPlayingAt();
   };
 
   findNextQuestion = currentTime => {
-    // (data is ordered by timeStart asc in mongoDB)
+    // (data is ordered by timeStart asc in mongoDB - so find first hit)
     return this.state.elearning.questions.find(question => {
       return question.timeStart > currentTime;
-    });  
+    });
   };
 
   componentWillUnmount() {
-    clearTimeout(this.timer);  
+    clearTimeout(this.timer);
   }
-
-  //--------------
-
-  // pauseVideo = e => {
-  //   this.player.pauseVideo();
-  // };
-
-  // playVideo = e => {
-  //   this.player.playVideo();
-  // }
 
   playOrPause = () => {
     this.state.playerStatus === "playing" ? this.player.pauseVideo() : this.player.playVideo();
@@ -138,57 +143,53 @@ class PlayElearning extends Component {
     this.setState({ currentQuestion: question, showQuestion: true, errorAnswer: null, explanation: null });
   };
 
-  handleSubmitAnswer = (e, answer) => {
+  // handle submit answer
+  handleSubmitAnswer = (e, answerGiven) => {
     e.preventDefault();
     // answer provided?
-    if (answer === null) {
+    if (answerGiven === null) {
       this.setState({
         errorAnswer: "provide an answer"
       });
       return;
     }
+    // score
+    const score = answerGiven === this.state.currentQuestion.answer ? 1 : 0;
     // loop answers
-    const matchFound = this.state.answersGiven.find(answerGiven => {
-      return answerGiven._id === this.state.currentQuestion._id;
-    });
-    // if already answered this question
-    if (matchFound) {
-      console.log(matchFound);
-      this.setState({
-        errorAnswer: "already answered this question",
-        explanation: this.setExplanation(matchFound.score, matchFound.answer, matchFound.answerGiven)
-      });
-      return;
-    }
-    // else add answer given
-    const score = answer === this.state.currentQuestion.answer ? 1 : 0;
-    const updatedArray = [
-      ...this.state.answersGiven,
-      {
-        _id: this.state.currentQuestion._id,
-        score: score,
-        answer: this.state.currentQuestion.answer,
-        answerGiven: answer
+    this.UserService.addAnswerToUser(
+      this.state.elearning._id,
+      this.state.currentQuestion._id,
+      this.state.currentQuestion.answer,
+      score,
+      answerGiven
+    ).then(user => {
+      if (user.message) {
+        this.setState({ errorAnswer: user.message, explanation: null });
+        return;
       }
-    ];
-    const explanation = this.setExplanation(score, this.state.currentQuestion.answer, answer);
-    this.setState({
-      answersGiven: updatedArray,
-      explanation: explanation,
-      errorAnswer: null
+      // show explanation
+      const explanation = this.setExplanation(score, this.state.currentQuestion.answer, answerGiven);
+      this.setState({
+        explanation: explanation,
+        errorAnswer: null
+      });
     });
   };
 
   setExplanation = (score, answer, answerGiven) => {
     return score
-      ? `You are correct! - the answer is ${answer}`
-      : `False, the correct answer is ${answer} (your answer was ${answerGiven})`;
+      ? `you are correct! - the answer is ${answer}`
+      : `false, the correct answer is ${answer} (your answer was ${answerGiven})`;
   };
 
   render() {
     return (
       <div>
+        {/* start - error handling or not logged in */}
         {this.state.error && <ErrorMessage error={this.state.error} />}
+        {!this.state.currentUser && <LoginOrSignup setCurrentUser={this.props.setCurrentUser} />}
+        {/* end - error handling or not logged in */}
+
         {this.state.elearning && (
           <section>
             <h2>Elearning module: {this.state.elearning.title}</h2>
@@ -207,9 +208,10 @@ class PlayElearning extends Component {
                 </div>
               )}
             </div>
-            {/* <div className="buttonOne" onClick={this.playOrPause}>
+
+            {/* <button className="buttonOne" onClick={this.playOrPause}>
               {this.state.playerStatus === "paused" ? "play" : "pause"}
-            </div> */}
+            </button> */}
 
             {/* start - show created questions */}
             {this.state.elearning.questions.length >= 1 && (

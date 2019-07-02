@@ -190,7 +190,7 @@ class EditElearning extends Component {
       });
   };
 
-  handleEditFormSubmit = e => {
+  handleEditFormSubmit = e => { 
     e.preventDefault();
     this.ElearningService.editQuestion(this.state.id, this.state.currentQuestion)
       .then(elearningWithQuestions => {
@@ -235,7 +235,8 @@ class EditElearning extends Component {
     }));
   };
 
-  deleteFakeAnswer = index => {
+  deleteFakeAnswer = (e,index) => {
+    e.preventDefault();
     const updatedArray = [...this.state.currentQuestion.answerfakes];
     updatedArray.splice(index, 1);
     this.setState(prevState => ({
@@ -244,6 +245,9 @@ class EditElearning extends Component {
         answerfakes: updatedArray
       }
     }));
+    this.setState({
+      errorForm: null
+    });
   };
   // -- fake answers - end - //
 
@@ -252,13 +256,24 @@ class EditElearning extends Component {
     // no action (part of single question)
   };
 
+  publishModule = (id, status) => {
+    this.ElearningService.publishElearning(id, status)
+      .then(result => { 
+        this.setState({ elearning: result });
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({ error: "something went wrong" });
+      });
+  };
+
   render() {
     return (
       <div>
         {this.state.error && <ErrorMessage error={this.state.error} />}
         {this.state.elearning && (
           <section>
-            <h2>Elearning module: {this.state.elearning.title}</h2>
+            <h2>{this.state.elearning.title}</h2>
             <div className="youtube-player-div">
               <div id="youtube-player" className="youtube-video" />
               {/* Question screen */}
@@ -289,9 +304,18 @@ class EditElearning extends Component {
             {/* end - show created questions */}
 
             {/* Button add question */}
-            <div className="buttonOne" onClick={this.createQuestion}>
+            <button className="buttonOne" onClick={this.createQuestion}>
               add question at current time
-            </div>
+            </button>
+            <button
+              className="buttonOne buttonGreen"
+              onClick={() => this.publishModule(this.state.elearning._id, this.state.elearning.status)}
+            >
+              {this.state.elearning.status === "private"
+                ? "publish module to public"
+                : "set module on private"}
+            </button>
+            <br />
 
             {/* start - Add or edit question - form */}
             {this.state.changeQuestionStatus &&
@@ -300,9 +324,10 @@ class EditElearning extends Component {
               ) : (
                 <h2>Edit question</h2>
               ))}
+
             {this.state.changeQuestionStatus && (
               <form onSubmit={this.handleSubmit} id="question-form">
-                <label>Time start in seconds</label>
+                <label>time start in seconds</label>
                 <input
                   type="number"
                   name="timeStart"
@@ -310,7 +335,7 @@ class EditElearning extends Component {
                   value={this.state.currentQuestion.timeStart}
                   onChange={this.changeHandlerCurrentQuestion}
                 />
-                <label>Question</label>
+                <label>question</label>
                 <input
                   type="text"
                   name="question"
@@ -318,7 +343,7 @@ class EditElearning extends Component {
                   value={this.state.currentQuestion.question}
                   onChange={this.changeHandlerCurrentQuestion}
                 />
-                <label>Answer</label>
+                <label>answer</label>
                 <input
                   type="text"
                   name="answer"
@@ -326,31 +351,37 @@ class EditElearning extends Component {
                   value={this.state.currentQuestion.answer}
                   onChange={this.changeHandlerCurrentQuestion}
                 />
-                <label>False answers</label>
+                <label>false answers</label>
                 {this.state.currentQuestion.answerfakes &&
                   this.state.currentQuestion.answerfakes.map((answer, index) => (
                     <div key={index}>
-                      <div className="buttonOne buttonRed" onClick={() => this.deleteFakeAnswer(index)}>
+                      <button className="buttonOne buttonRed" onClick={(e) => this.deleteFakeAnswer(e,index)}>
                         x
-                      </div>
+                      </button>
                       <input
+                        className="input-inline"
+                        required={true}
                         value={this.state.currentQuestion.answerfakes[index]}
                         type="text"
                         onChange={e => this.changeHandlerFakeAnswers(index, e)}
                       />
                     </div>
                   ))}
-                <div className="buttonOne" onClick={this.addFakeAnswer}>
-                  add false answer option
-                </div>
                 {this.state.errorForm && <ErrorMessage error={this.state.errorForm} />}
-                <button type="submit">save question</button>
+                <div>
+                  <button className="buttonOne" onClick={this.addFakeAnswer}>
+                    add false answer option
+                  </button>
+                  <button className="buttonOne buttonGreen" type="submit">
+                    save question
+                  </button>
                 {/* If edit , show delete question */}
                 {this.state.changeQuestionStatus === "edit" && (
-                  <div className="buttonOne buttonRed" onClick={this.deleteQuestion}>
+                  <button className="buttonOne buttonRed" onClick={this.deleteQuestion}>
                     delete question
-                  </div>
+                  </button>
                 )}
+                </div>
               </form>
             )}
             {/* end - Add new question - form */}

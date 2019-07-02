@@ -10,18 +10,11 @@
   /* visibility: hidden; */
   position: absolute;
   top: 10px;
-  bottom: 0;
-  right: 10px;
-  left: 10px;
-  width: calc(100% - 20px);
-  height: calc(100% - 49px); 
-  /* 80%; */
+  width: calc(100% - 40px);
+  height: calc(100% - 83px); 
   overflow-y: auto;
-  z-index: 2;
-  /* pointer-events: none;
-  cursor: not-allowed; */
-  background: green;
-  transition: background 2.5s;
+  z-index: 2; 
+  background: #dcc7aa; 
   padding: 20px;
 }
 
@@ -31,44 +24,4 @@
 
 #youtube-player {
   position: absolute;
-}
-
-.question-container {
-  display: block; 
-  padding: 5px; 
-  position: relative;
-  margin: 0 14px 25px 0; 
-  width: 640px; 
-  /* hardcoded width.. width of the youtube player */
-  /* youtube player timeline has a margin of 12 on both sides */
-}
-
-.question-bubble {
-  display: inline-block;
-  border-radius: 10px;
-  border: 1px solid green; 
-  padding: 5px;
-  /* position: relative; */
-}
- 
-
-.question-bubble span {
-  visibility: hidden;
-  width: 120px;
-  background-color: rgb(0, 88, 5);
-  color: #fff;
-  text-align: center;
-  padding: 5px 0;
-  border-radius: 10px;
-  /* Position the tooltip text - see examples below! */
-  position: absolute;
-  z-index: 1;
-  width: 120px;
-  bottom: 110%;
-  left: 50%;
-  margin-left: -60px;
-}
-
-.question-bubble:hover span {
-  visibility: visible;
 }

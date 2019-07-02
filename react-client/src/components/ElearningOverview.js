@@ -19,17 +19,22 @@ class ElearningOverview extends Component {
     });
   }
 
+  limitTitle = title => {
+    // title longer than 55? Add "..." else return title
+    return title.length > 65 ? title.substring(0, title.lastIndexOf(" ")) + " ..." : title;
+  }
+
   render() {
     return (
       <section className="Elearning-overview-section">
-        <h2>Overview</h2>
+        <h2>latest modules</h2>
         {this.state.elearnings && (
           <div className="Elearning-overview-container">
             {this.state.elearnings.map(elearning => {
               return (
                 <div className="Elearning-overview-module" key={elearning._id}>
                   <Link to={`/play/${elearning._id}`}>
-                    <h3>{elearning.title}</h3>
+                    <h4>{this.limitTitle(elearning.title)}</h4>
                     <img src={elearning.youtube_img} alt="elearning thumbnail" />
                   </Link>
                 </div>

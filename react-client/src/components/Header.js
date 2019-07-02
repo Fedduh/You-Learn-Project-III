@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import AuthService from "../services/AuthService.js";
-import "./Header.css";
 
 class Header extends Component {
   authService = new AuthService();
@@ -15,20 +14,21 @@ class Header extends Component {
   render() {
     return (
       <header>
-        <Link to="/">Modules</Link>
+        <Link to="/">home</Link>
+        <Link to="/create">create</Link>
         {this.props.currentUser ? (
           <div>
-            <Link to="/create">Create</Link>
-            <Link to="/" onClick={this.logoutUser}>
-              Logout
-            </Link>
-            <Link to="/">Profile</Link>
+            <Link to="/">profile</Link>
           </div>
         ) : (
           <div>
-            {/* <Link to="#signup-form">Signup</Link> */}
-            <Link to="/">Login</Link>
+            <Link to="/">login</Link>
           </div>
+        )}
+        {this.props.currentUser && (
+          <Link to="/" onClick={this.logoutUser}>
+            logout
+          </Link>
         )}
       </header>
     );

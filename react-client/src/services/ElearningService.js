@@ -57,6 +57,30 @@ class ElearningService {
     });
   }
 
+  deleteModule = (id) => {
+    return this.service.post(`/elearning/delete/${id}`)
+    .then(result => {
+      console.log('deleted e-learning')
+      return result.data;
+    })
+    .catch(err => {
+      console.log(err);
+      return err.response.data;
+    });
+  }
+
+  publishElearning = (id, status) => {
+    const setStatus = status === "published" ? "private" : "published";
+    return this.service.post(`/elearning/create/${id}/publish`, {status: setStatus})
+    .then(result => { 
+      return result.data;
+    })
+    .catch(err => {
+      console.log(err);
+      return err.response.data;
+    });
+  }
+
   addQuestion = (id, questionObject) => {
       return this.service.post(`elearning/create/${id}/addquestion`, {
         questionObject

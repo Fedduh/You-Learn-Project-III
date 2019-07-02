@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import AuthService from "../services/AuthService";
 import ErrorMessage from "./ErrorMessage";
+import PasswordShower from "./PasswordShower";
 
 class Login extends Component {
   state = {
     username: "",
     password: "",
-    error: null
+    error: null,
+    showPassWord: "password"
   };
 
   changeHandler = e => {
@@ -17,18 +19,22 @@ class Login extends Component {
 
   handleFormSubmit = e => {
     e.preventDefault();
-    this.authService
-      .login(this.state.username, this.state.password)
-      .then(response => {
-        if (response.message) {
-          this.setState({ error: response.message });
-          return;
-        }
-        this.props.setCurrentUser(response.username);
-        // this.props.history.push("/");
-      });
+    this.authService.login(this.state.username, this.state.password).then(response => {
+      if (response.message) {
+        this.setState({ error: response.message });
+        return;
+      }
+      this.props.setCurrentUser(response.username);
+      // this.props.history.push("/");
+    });
   };
- 
+
+  showPassWordChange = () => { 
+    var newState = this.state.showPassWord === "password" ? "text" : "password";
+    this.setState({
+      showPassWord: newState
+    });
+  };
 
   authService = new AuthService();
 
@@ -36,9 +42,9 @@ class Login extends Component {
     return (
       <div id="login-form">
         {this.state.error && <ErrorMessage error={this.state.error} />}
-        <h2>log in</h2>
+        <h2>login</h2>
         <form onSubmit={this.handleFormSubmit}>
-          <label>*username</label>
+          <label>username</label>
           <input
             type="text"
             name="username"
@@ -47,17 +53,24 @@ class Login extends Component {
             value={this.state.username}
             onChange={this.changeHandler}
           />
-          <label>*password</label>
+
+          <PasswordShower text="password" show={this.state.showPassWord} onClick={this.showPassWordChange} />
+
           <input
-            type="password"
+            type={this.state.showPassWord}
             name="password"
             autoComplete="current-password"
+            required={true}
             value={this.state.password}
             onChange={this.changeHandler}
           />
-          <button type="submit">Log in</button>
+
+          <button className="buttonOne" type="submit">log in</button>
+        <button className="buttonOne" onClick={this.props.setNewUser}>register as new user</button>
         </form>
-        <div className="buttonOne" onClick={this.props.setNewUser}>New user?</div>
+        {/* <div className="buttonOne" onClick={this.props.setNewUser}>
+          New user?
+        </div> */}
       </div>
     );
   }

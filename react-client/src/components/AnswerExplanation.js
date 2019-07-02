@@ -1,12 +1,14 @@
-import React from 'react';
+import React from "react";
 
-const AnswerExplanation = (props) => {
-  return ( 
-    <div className="explanation">
-      {props.explanation}
-      <button type="button" onClick={props.playVideo}>Continue</button>
+const AnswerExplanation = props => {
+  return (
+    <div>
+      <div className="explanation">{props.explanation}</div>
+      <button className="buttonOne" type="button" onClick={props.playVideo}>
+        continue
+      </button>
     </div>
-   );
-}
- 
+  );
+};
+
 export default AnswerExplanation;

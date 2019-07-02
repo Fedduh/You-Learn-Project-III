@@ -1,10 +1,17 @@
-import React from 'react';
-import './ErrorMessage.css';
+import React from "react";
 
-const ErrorMessage = (props) => {
-  return ( 
-    <div className="error-message">{props.error}</div>
-   );
-}
- 
+const ErrorMessage = props => {
+  return (
+    <div>
+      <div className="error-message">
+        <span role="img" aria-label="exclamation">
+          ❗
+        </span>
+        &nbsp;{props.error}
+      </div>
+      <br />
+    </div>
+  );
+};
+
 export default ErrorMessage;

@@ -1,24 +1,91 @@
-.App {
-  /* text-align: center; */
-  margin: 0 auto;
-  padding: 0 40px 40px;
-  max-width: 900px;
-}
+/* Dark grey	#9597AA	rgb(149, 151, 170)	Zwart beter? Wit voor grote tekst ok
+Orange	#F7882F 	rgb(247, 136, 47)	Zwart
+yellow	#f7c331	rgb(247, 195, 49)	Zwart
+Brown	#dcc7aa	rgb(220, 199, 170)	Zwart
+Light grey	#EDEDE3	237,237,227	Zwart */
 
-.signup-login-container {
-  background-color: greenyellow;
-  margin: 20px 0;
+/* Main content div - start */
+.App {
+  margin: 0 auto;
+  padding: 0 40px 0px;
+  max-width: 900px;
+  /* for sticky footer */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; 
 }
 
 .content {
-  padding-bottom: 60px; 
+  flex: 1;
+}
+/* Main content div - end */
+
+/* ---------------------------------------------------- */
+
+/* Header - start */
+header {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+}
+/* Header - end */
+
+/* ---------------------------------------------------- */
+
+/* Heading + p - start */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: rgb(54, 51, 51);
 }
 
-
-.width100 {
-  width: 100px;
-  text-align: center;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  display: inline-block; 
+  padding: 3px 10px 7px;
+  border-radius: 2px;
+  font-variant: small-caps;
+  margin-right: 10px;
+  -webkit-box-shadow: 4px 6px 3px 0px rgba(63, 63, 69, 0.8);
+  -moz-box-shadow: 4px 6px 3px 0px rgba(63, 63, 69, 0.8);
+  box-shadow: 4px 6px 3px 0px rgba(63, 63, 69, 0.8);
 }
+
+h2 {
+  background-color: #dcc7aa;
+}
+
+h3, h4 {
+  background-color: #f7c331;
+}
+
+.h3-no-margin {
+  margin: 0;
+}
+
+/* Heading + p - end */
+
+/* ---------------------------------------------------- */
+
+/* Links - start */
+a {
+  font-size: 120%;
+  color: rgb(54, 51, 51);
+  text-decoration: none;
+  font-variant: small-caps;
+}
+/* Links - end */
+
+/* ---------------------------------------------------- */
 
 /* Images - start */
 .img-small {
@@ -27,66 +94,145 @@
 }
 /* Images - end */
 
+/* ---------------------------------------------------- */
+
 /* Forms - start*/
 label {
   display: block;
   margin: 5px 0;
 }
 
-input {
+input,
+textarea {
   width: 90%;
   margin: 5px 0;
+  display: block;
+}
+
+.input-inline {
+  display: inline-block;
 }
 
 .radio-button {
   width: auto;
-}
-
-textarea {
-  width: 90%;
-  margin: 5px 0;
+  display: inline-block;
+  margin-right: 10px; 
 }
 
 .explanation {
-  background-color: rgb(253, 204, 114);
-  padding: 5px;
+  background-color: #EDEDE3;
+  padding: 5px; 
 }
 /* Forms - end */
 
+/* Signup / login forms - start */
+.signup-login-container {
+  margin-bottom: 20px; 
+}
+.signup-login-container input {
+  max-width: 200px;
+}
+/* Signup / login forms - end */
+
+/* ---------------------------------------------------- */
 
 /* Buttons - start */
 button {
-  margin: 5px 0;
+  border: none;
+  box-shadow: 2px 3px 3px 0px rgba(63, 63, 69, 0.8);
 }
 
 .buttonOne {
-  background-color: rgb(56, 56, 56);
-  color: white;
-  border-radius: 10px;
-  display: inline-block;
-  padding: 5px;
+  background-color: #f7882f; 
+  color: rgb(29, 27, 27);
+  margin-right: 10px !important;
+  padding: 5px 10px;
   margin: 10px 0;
   cursor: pointer;
-} 
- 
-.buttonRed {
-  margin-right: 5px;
-  padding: 0 5px;
+}
+
+.buttonOne:hover {
+  box-shadow: 2px 3px 3px 0px rgb(214, 211, 211);
+  color: #ffffff;
+}
+
+.buttonRed { 
   background-color: rgb(236, 113, 113);
 }
-/* Buttons - end */
 
-
-/* Buttons - start */
-button {
-  display: block;
+.buttonGreen { 
+  background-color: rgb(113, 236, 113);
 }
+
 /* Buttons - end */
 
-footer {
-  position: absolute;
-  bottom: 0; 
-  margin: 0 auto;
-  height: 60px;
+/* ---------------------------------------------------- */
+
+/* Errors - start */
+.error-message {
+  background-color: rgb(247, 94, 47);
+  padding: 10px;
+  margin: 5px 0; 
+  display: inline-block;
+  /* box-shadow: 2px 3px 3px 0px rgba(63, 63, 69, 0.8); */
+}
+
+.delete-confirmation-div {
+  margin-bottom: 30px;
+}
+/* Errors - end */
+
+/* ---------------------------------------------------- */
+
+/* Password shower */
+.monkey {
+  cursor: pointer;
+}
+
+/* ---------------------------------------------------- */
+
+/* Questions - start */
+
+.question-container {
   display: block; 
+  padding: 5px; 
+  position: relative;
+  margin: 0 14px 35px 0; 
+  width: 640px; 
+  /* hardcoded width.. width of the youtube player */
+  /* youtube player timeline has a margin of 12 on both sides */
 }
+
+.question-bubble {
+  display: inline-block;  
+  cursor: pointer;
+} 
+
+.question-bubble span {
+  visibility: hidden;
+  width: 120px;
+  background-color: #dcc7aa; 
+  text-align: center;
+  padding: 5px 0; 
+  position: absolute;
+  z-index: 1;
+  width: 120px;
+  bottom: 110%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.question-bubble:hover span {
+  visibility: visible;
+}
+/* Questions - end */
+
+/* ---------------------------------------------------- */
+
+/* Footer - start */
+footer {
+  padding: 10px 0;
+  font-size: 80%;
+  
+}
+/* Footer - end */

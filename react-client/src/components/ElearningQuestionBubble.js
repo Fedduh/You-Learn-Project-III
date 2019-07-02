@@ -13,10 +13,12 @@ const ElearningQuestionBubble = props => {
       style={divStyle}
       onClick={() => props.showQuestionForm(props.question)}
     >
-      Q{props.index + 1}
+      <h3 className="h3-no-margin">
+        {props.index + 1}
+      </h3>
       <span>
-        @ {props.question.timeStart} sec
-        <br />
+        {/* @ {props.question.timeStart} sec
+        <br /> */}
         {Math.floor(props.question.timeStart / 60)} min {props.question.timeStart % 60} sec
       </span>
     </div>

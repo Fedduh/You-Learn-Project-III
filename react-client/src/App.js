@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import LoginOrSignup from "./components/LoginOrSignup";
 import AuthService from "./services/AuthService";
 import Profile from "./components/Profile";
 import ElearningOverview from "./components/ElearningOverview";
 import CreateOverview from "./components/CreateOverview";
-import EditElearning from "./components/EditElearning"
-import PlayElearning from "./components/PlayElearning"
+import EditElearning from "./components/EditElearning";
+import PlayElearning from "./components/PlayElearning";
 
-// import Footer from "./components/Footer";
 import { Switch, Route } from "react-router-dom";
 
 import "./App.css";
@@ -26,7 +26,7 @@ class App extends Component {
       this.fetchUser();
     }
   }
-  
+
   fetchUser = () => {
     this.authService
       .isLoggedIn()
@@ -46,7 +46,7 @@ class App extends Component {
   };
 
   logoutUser = () => {
-    console.log('app js logout user')
+    console.log("app js logout user");
     this.setState({
       currentUser: null
     });
@@ -55,63 +55,66 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Header
-          currentUser={this.state.currentUser}
-          logoutUser={this.logoutUser}
-        />
+        <Header currentUser={this.state.currentUser} logoutUser={this.logoutUser} />
 
-        <Switch>
-          {/* Main content - signup / profile / overview */}
-          <Route
-            exact
-            path="/"
-            render={() => (
-              <div className="content">
-                {this.state.currentUser && (
-                  <section className="profile-container">
-                    <Profile currentUser={this.state.currentUser} />
-                  </section>
-                )}
-                {!this.state.currentUser && (
-                  <LoginOrSignup setCurrentUser={this.setCurrentUser} />
-                )}
-                <ElearningOverview />
-              </div>
-            )}
-          />
-          {/* Main content - end */}
+        {/* !! START CONTENT */}
+        <div className="content">
+          <Switch>
+            {/* Main content - signup / profile / overview */}
+            <Route
+              exact
+              path="/"
+              render={() => (
+                <div>
+                  {this.state.currentUser && (
+                    <section className="profile-container">
+                      <Profile currentUser={this.state.currentUser} />
+                    </section>
+                  )}
+                  {!this.state.currentUser && <LoginOrSignup setCurrentUser={this.setCurrentUser} />}
+                  <ElearningOverview />
+                </div>
+              )}
+            />
+            {/* Main content - end */}
 
-          {/* Create - start */}
-          <Route
-            exact
-            path="/create"
-            render={() => (
-              <CreateOverview currentUser={this.state.currentUser} setCurrentUser={this.setCurrentUser}/>
-            )}
+            {/* Create - start */}
+            <Route
+              exact
+              path="/create"
+              render={() => (
+                <CreateOverview currentUser={this.state.currentUser} setCurrentUser={this.setCurrentUser} />
+              )}
             />
             <Route
-            exact
-            path="/create/:id"
-            // pass id from match in props
-            render={({match}) => (
-              <EditElearning currentUser={this.state.currentUser} id={match.params.id}/>
-            )}
+              exact
+              path="/create/:id"
+              // pass id from match in props
+              render={({ match }) => (
+                <EditElearning currentUser={this.state.currentUser} id={match.params.id} />
+              )}
             />
             {/* Create - end */}
 
             {/* Play -start */}
             <Route
-            exact
-            path="/play/:id"
-            // pass id from match in props
-            render={({match}) => (
-              <PlayElearning currentUser={this.state.currentUser} id={match.params.id}/>
-            )}
+              exact
+              path="/play/:id"
+              // pass elearning-id from match in props
+              render={({ match }) => (
+                <PlayElearning
+                  currentUser={this.state.currentUser}
+                  id={match.params.id}
+                  setCurrentUser={this.setCurrentUser}
+                />
+              )}
             />
             {/* Play - end */}
-        </Switch>
+          </Switch>
+        </div>
+        {/* !! END CONTENT */}
 
-        {/* <Footer /> */}
+        <Footer />
       </div>
     );
   }

@@ -68,7 +68,14 @@ class SingleQuestion extends Component {
           <button type="submit" className="buttonOne">
             save
           </button>
-          {this.props.error && <ErrorMessage error={this.props.error} />}
+          {this.props.error && (
+            <div>
+              <ErrorMessage error={this.props.error} />
+              <button className="buttonOne" type="button" onClick={this.props.playVideo}>
+                continue
+              </button>
+            </div>
+          )}
           {this.props.explanation && (
             <AnswerExplanation explanation={this.props.explanation} playVideo={this.props.playVideo} />
           )}

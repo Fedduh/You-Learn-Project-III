@@ -5,8 +5,9 @@ class Profile extends Component {
   render() {
     return (
       <div>
-        <h2>Welcome {this.props.currentUser}</h2>
-        <div>abc</div>
+        <h2>active modules</h2>
+        <p>{this.props.currentUser}, you are currently working on these modules:</p>
+        <p>Some module overview which has to be build</p>
       </div>
     );
   }
