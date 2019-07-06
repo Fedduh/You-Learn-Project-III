@@ -66,7 +66,7 @@ router.post("/addanswer/:answerid", (req, res, next) => {
       // success
       res.status(200).json(updateUser);
     } catch (e) {
-      res.status(400).json({ message: "something went wrong" });
+      res.status(500).json({ message: "something went wrong" });
       console.error(e);
     }
   }

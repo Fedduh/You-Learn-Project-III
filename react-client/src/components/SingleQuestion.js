@@ -11,14 +11,18 @@ class SingleQuestion extends Component {
   shuffleAnswers = () => {
     const answerOptions = [...this.props.currentQuestion.answerfakes, this.props.currentQuestion.answer];
     const shuffledAnswers = [];
-    const answeroptions = answerOptions.length;
-    for (let i = 0; i < answeroptions; i++) {
+    const answerLength = answerOptions.length;
+    for (let i = 0; i < answerLength; i++) {
       var randomNr = Math.floor(Math.random() * answerOptions.length);
       shuffledAnswers.push(answerOptions[randomNr]);
       answerOptions.splice(randomNr, 1);
     }
     return shuffledAnswers;
   };
+
+  setAnswers = () => {
+    return [...this.props.currentQuestion.answerfakes, this.props.currentQuestion.answer];
+  }
 
   handleRadioChange = e => {
     this.setState({
@@ -33,12 +37,20 @@ class SingleQuestion extends Component {
   }
 
   // needed for when you go to a different question
+  // also needed for preview and save when editing questions (state is used)
   componentDidUpdate(prevProps) {
+    // edit mode? no need to shuffle
+    if (this.props.currentQuestion !== prevProps.currentQuestion && this.props.mode === "edit") {
+      this.setState({
+        answerOptions: this.setAnswers()
+      });
+      return;
+    } 
     if (this.props.currentQuestion !== prevProps.currentQuestion) {
       this.setState({
         answerOptions: this.shuffleAnswers()
       });
-    }
+    } 
   }
 
   render() {

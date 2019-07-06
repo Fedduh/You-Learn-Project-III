@@ -16,15 +16,14 @@ class ElearningOverview extends Component {
   componentDidMount() {
     // Set e-learning modules
     this.elearningService
-      .getSix(this.state.elearnings ? this.state.elearnings.length : 0, this.state.categoryChosen)
+      .getThreeModules(this.state.elearnings ? this.state.elearnings.length : 0, this.state.categoryChosen)
       .then(elearnings => {
         this.setState({
           elearnings: elearnings
         });
       });
     // Set categories
-    if (this.state.categories === null) {
-      console.log("setting categories");
+    if (this.state.categories === null) { 
       this.elearningService.getCategories().then(categories => {
         this.setState({
           categories: categories
@@ -35,9 +34,8 @@ class ElearningOverview extends Component {
 
   showMoreResult = newCategoryInd => {
     this.elearningService
-      .getSix(this.state.elearnings ? this.state.elearnings.length : 0, this.state.categoryChosen)
-      .then(elearnings => {
-        console.log("results", elearnings);
+      .getThreeModules(this.state.elearnings ? this.state.elearnings.length : 0, this.state.categoryChosen)
+      .then(elearnings => { 
         // no new results? Disable the load more button
         if (elearnings.length < 3) {
           this.setState({

@@ -9,11 +9,11 @@ const mongoose = require("mongoose");
 // by default, you need to set it to false.
 mongoose.set("useFindAndModify", false);
 
-const checkAutorization = (userID, elearningID) => {
-  console.log("input is", userID, elearningID);
+const checkAutorization = (user, elearningID) => {
+  const userID = user ? user._id : null;
   // check validity ID
   if (!mongoose.Types.ObjectId.isValid(elearningID)) {
-    return { code: 404, message: "incorrect URL" };
+    return { code: 404, message: "elearning module not found" };
   }
   // check login status
   if (!userID) {
@@ -66,7 +66,8 @@ router.get("/find/:length/:cat", (req, res, next) => {
 // POST - NEW module
 router.post("/", (req, res, next) => {
   if (!req.isAuthenticated()) {
-    return res.status(400).json({ message: "you need to be logged in" });
+    res.status(400).json({ message: "you need to be logged in" });
+    return;
   }
 
   const youtube_img = req.body.state.youtube_img;
@@ -76,7 +77,6 @@ router.post("/", (req, res, next) => {
   const youtube_url = req.body.state.youtube_url;
   const youtube_duration = req.body.state.youtube_duration;
   const youtube_duration_seconds = req.body.state.youtube_duration_seconds;
-
   const creator = req.user._id;
 
   // filled in required fields?
@@ -89,36 +89,34 @@ router.post("/", (req, res, next) => {
     return res.status(400).json({ message: "title can be max 100 characters" });
   }
 
-  // check name unique
-  Elearning.findOne({ title: youtube_title }).then(elearning => {
-    if (elearning !== null) {
-      res.status(400).json({ message: "this title is already used" });
-      return;
-    }
-
-    // else -> title is unique. Create elearning
-    const newElearning = new Elearning({
-      status: "private",
-      title: youtube_title.toLowerCase(),
-      creator: creator,
-      youtube_url: youtube_url,
-      youtube_img: youtube_img,
-      youtube_description: youtube_description,
-      youtube_duration: youtube_duration,
-      youtube_duration_seconds: youtube_duration_seconds,
-      youtube_category: youtube_category
-    });
-
-    newElearning
-      .save()
-      .then(() => {
-        res.status(200).send(newElearning);
-      })
-      .catch(err => {
-        res.status(400).json({ message: "something went wrong" });
-        console.log(err);
+  async function checkAndCreate() {
+    try {
+      // check if name is already used
+      const elearning = await Elearning.findOne({ title: youtube_title });
+      if (elearning !== null) {
+        res.status(400).json({ message: "this title is already used" });
+        return;
+      }
+      const newElearning = new Elearning({
+        status: "private",
+        title: youtube_title.toLowerCase(),
+        creator: creator,
+        youtube_url: youtube_url,
+        youtube_img: youtube_img,
+        youtube_description: youtube_description,
+        youtube_duration: youtube_duration,
+        youtube_duration_seconds: youtube_duration_seconds,
+        youtube_category: youtube_category
       });
-  });
+      const addToDatabase = await newElearning.save();
+      res.status(200).json(addToDatabase);
+    } catch (e) {
+      console.log(e);
+      return { code: 500, message: "something went wrong" };
+    }
+  }
+
+  checkAndCreate();
 });
 
 // retreive all unique categories for filter menu
@@ -138,7 +136,7 @@ router.get("/categories", (req, res, next) => {
 router.post("/delete/:id", (req, res, next) => {
   async function deleteModuleFromUser() {
     try {
-      const check = await checkAutorization(req.user._id, req.params.id);
+      const check = await checkAutorization(req.user, req.params.id);
       if (check !== "ok") {
         res.status(check.code).json(check);
         return;
@@ -155,37 +153,13 @@ router.post("/delete/:id", (req, res, next) => {
   }
 
   deleteModuleFromUser();
-
-  // if (req.user == null) {
-  //   res.status(404).json({ message: "login first" });
-  //   return;
-  // }
-  // async function deleteFromUser() {
-  //   try {
-  //     let elearning = await Elearning.findOne({ _id: req.params.id });
-  //     if (!elearning.creator.equals(req.user._id)) {
-  //       // objectId format. check match
-  //       res.status(401).json({
-  //         message: "no access - you are not the creator of this e-learning module"
-  //       });
-  //       return;
-  //     }
-  //     let deleteElearning = await Elearning.findOneAndDelete({ _id: req.params.id });
-  //     res.status(200).json(deleteElearning);
-  //   } catch (e) {
-  //     res.status(400).json({ message: "something went wrong" });
-  //     console.error(e);
-  //   }
-  // }
-
-  // deleteFromUser();
 });
 
 // PUBLISH
 router.post("/create/:id/publish", (req, res, next) => {
   async function publishModuleFromUser() {
     try {
-      const check = await checkAutorization(req.user._id, req.params.id);
+      const check = await checkAutorization(req.user, req.params.id);
       if (check !== "ok") {
         res.status(check.code).json(check);
         return;
@@ -226,7 +200,7 @@ router.get("/create", (req, res, next) => {
 router.get("/create/:id", (req, res, next) => {
   async function editModuleFromUser() {
     try {
-      const check = await checkAutorization(req.user._id, req.params.id);
+      const check = await checkAutorization(req.user, req.params.id);
       if (check !== "ok") {
         res.status(check.code).json(check);
         return;
@@ -279,7 +253,7 @@ router.get("/play/:id", (req, res, next) => {
 router.post("/create/:id/addquestion", (req, res, next) => {
   async function addQuestionToModule() {
     try {
-      const check = await checkAutorization(req.user._id, req.params.id);
+      const check = await checkAutorization(req.user, req.params.id);
       if (check !== "ok") {
         res.status(check.code).json(check);
         return;
@@ -321,7 +295,7 @@ router.post("/create/:id/addquestion", (req, res, next) => {
 router.post("/create/:id/editquestion/:idq", (req, res, next) => {
   async function editQuestionToElearning() {
     try {
-      const check = await checkAutorization(req.user._id, req.params.id);
+      const check = await checkAutorization(req.user, req.params.id);
       if (check !== "ok") {
         res.status(check.code).json(check);
         return;
@@ -373,7 +347,7 @@ router.post("/create/:id/editquestion/:idq", (req, res, next) => {
 router.post("/create/:id/deletequestion/:idq", (req, res, next) => {
   async function deleteOneQuestionFromElearning() {
     try {
-      const check = await checkAutorization(req.user._id, req.params.id);
+      const check = await checkAutorization(req.user, req.params.id);
       if (check !== "ok") {
         res.status(check.code).json(check);
         return;

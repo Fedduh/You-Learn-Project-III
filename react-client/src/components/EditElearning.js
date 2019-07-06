@@ -289,6 +289,7 @@ class EditElearning extends Component {
                 <SingleQuestion
                   currentQuestion={this.state.currentQuestion}
                   handleSubmitAnswer={this.handleSubmitAnswer}
+                  mode="edit"
                 />
               )}
             </div>

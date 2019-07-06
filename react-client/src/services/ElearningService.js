@@ -6,8 +6,7 @@ class ElearningService {
     withCredentials: true
   });
 
-  getSix = (arrayLength, category) => {
-    console.log(arrayLength);
+  getThreeModules = (arrayLength, category) => { 
     return this.service
       .get(`/elearning/find/${arrayLength}/${category}`)
       .then(elearnings => {

@@ -32,8 +32,7 @@ class CreateNewElearning extends Component {
     if (this.state.youtube_object_set) {
       this.setState({ error_form_one: "you already selected a video" });
       return;
-    }
-    console.log("sent", this.state);
+    } 
     this.elearningService
       .getYoutubeSnippetByUrl(this.state.youtube_url)
       .then(result => {
@@ -54,8 +53,7 @@ class CreateNewElearning extends Component {
             youtube_description: result.snippet.description.substring(0, 500),
             youtube_duration: this.convertTimeToMinutes(result.contentDetails.duration),
             youtube_duration_seconds: this.convertTimeToSeconds(result.contentDetails.duration)
-          });
-          console.log("received", result);
+          }); 
         }
       })
       .catch(err => {
