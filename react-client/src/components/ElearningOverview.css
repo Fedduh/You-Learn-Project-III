@@ -4,13 +4,12 @@
   flex-wrap: wrap;
   justify-content: space-around;
 }
-  
+
 .Elearning-overview-module {
   /* background-color: teal; */
-  margin: 10px; 
-  min-width: 250px; 
-  max-width: 300px;
-  height: 240px;
+  margin: 10px;
+  width: 270px;
+  height: 230px;
   position: relative;
 }
 
@@ -18,16 +17,109 @@
   width: 250px;
   height: auto;
   position: absolute;
-  top: 30px;
-  left: 20px; 
+  top: 40px;
+  left: 20px;
   z-index: 1;
 }
 
 .Elearning-overview-module h4 {
   margin: 5px 0;
   /* max 3 lines description */
-  max-height: 68px;
-  overflow: hidden; 
+  max-height: 46px;
+  overflow: hidden;
   position: absolute;
-  z-index: 2;
+  z-index: 12;
 }
+
+/* Flipping cards */
+/* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_flip_card */
+.flip-card {
+  background-color: transparent;
+  width: 270px;
+  height: 230px;
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  z-index: 5;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.flip-card-front {
+  width: 100%;
+}
+
+.flip-card-back {
+  width: calc(100% - 20px);
+  margin-top: 45px;
+  padding: 5px 10px 0;
+  height: 175px;
+  overflow: hidden;
+  background-color: #dcc7aa;
+  transform: rotateY(180deg);
+  -webkit-box-shadow: 4px 6px 3px 0px rgba(63, 63, 69, 0.8);
+  -moz-box-shadow: 4px 6px 3px 0px rgba(63, 63, 69, 0.8);
+  box-shadow: 4px 6px 3px 0px rgba(63, 63, 69, 0.8);
+}
+
+/* Dropdown */
+.dropbtn {
+  background-color: #dcc7aa;
+  margin-bottom: 5px;
+}
+
+.dropbtn:hover,
+.dropbtn:focus {
+  background-color: #f7882f;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #dcc7aa;
+  width: 237px;
+  overflow: auto;
+  z-index: 15;
+  -webkit-box-shadow: 4px 6px 3px 0px rgba(63, 63, 69, 0.8);
+  -moz-box-shadow: 4px 6px 3px 0px rgba(63, 63, 69, 0.8);
+  box-shadow: 4px 6px 3px 0px rgba(63, 63, 69, 0.8);
+  cursor: pointer;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content p {
+  padding: 4px 16px;
+  margin: 2px 0;
+  display: block;
+}
+
+.dropdown p:hover {
+  background-color: #f7882f;
+}
+/* Orange	#F7882F 	rgb(247, 136, 47)	Zwart
+yellow	#f7c331	rgb(247, 195, 49)	Zwart
+Brown	#dcc7aa	rgb(220, 199, 170)	Zwart */

@@ -37,7 +37,7 @@ class PlayElearning extends Component {
   setElearning = () => {
     this.setState({ id: this.props.id, currentUser: this.props.currentUser });
     // load the elearning from db
-    this.ElearningService.getOneElearningById(this.props.id)
+    this.ElearningService.playOneElearningById(this.props.id)
       .then(elearning => {
         if (elearning.message) {
           this.setState({ error: elearning.message });

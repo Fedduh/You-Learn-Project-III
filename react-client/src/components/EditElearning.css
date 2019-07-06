@@ -11,7 +11,7 @@
   position: absolute;
   top: 10px;
   width: calc(100% - 40px);
-  height: calc(100% - 83px); 
+  height: calc(100% - 90px); 
   overflow-y: auto;
   z-index: 2; 
   background: #dcc7aa; 

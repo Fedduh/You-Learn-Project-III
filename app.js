@@ -6,6 +6,10 @@ const express = require("express");
 const favicon = require("serve-favicon"); 
 const hbs = require('hbs');
 const mongoose = require("mongoose");
+// casl/mongoose
+  // const { accessibleRecordsPlugin } = require('@casl/mongoose')
+  // mongoose.plugin(accessibleRecordsPlugin)
+// casl end
 const logger = require("morgan");
 const path = require("path");
 const cors = require('cors');
@@ -73,6 +77,9 @@ app.use("/", index);
 
 const authRoutes = require("./routes/auth");
 app.use("/auth", authRoutes);
+
+const userRoutes = require("./routes/user");
+app.use("/user", userRoutes);
 
 const eLearningRoutes = require("./routes/elearning");
 app.use("/elearning", eLearningRoutes);

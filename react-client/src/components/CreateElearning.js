@@ -141,7 +141,7 @@ class CreateNewElearning extends Component {
             <textarea
               rows="5" // cols (width) is set to 100% in css
               overflow="auto"
-              maxLength="500"
+              maxLength="200"
               name="youtube_description"
               onChange={this.changeHandler}
               value={this.state.youtube_description}

@@ -58,7 +58,7 @@ class CreateOverview extends Component {
     this.setState({ moduleToDelete: null });
   };
 
-  deleteModuleYes = () => { 
+  deleteModuleYes = () => {
     this.elearningService.deleteModule(this.state.moduleToDelete._id).then(elearning => {
       if (elearning.message) {
         this.setState({ error: elearning.message });
@@ -92,8 +92,9 @@ class CreateOverview extends Component {
 
   limitTitle = title => {
     // title longer than 55? Add "..." else return title
-    return title.length > 55 ? title.substring(0, title.lastIndexOf(" ")) + " ..." : title;
-  }
+    const shortTitle = title.substring(0, 55);
+    return title.length > 55 ? title.substring(0, shortTitle.lastIndexOf(" ")) + " ..." : title;
+  };
 
   render() {
     return (

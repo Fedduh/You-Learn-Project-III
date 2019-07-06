@@ -72,6 +72,9 @@ h3, h4 {
   margin: 0;
 }
 
+.small-letter {
+  font-size: 73%;
+}
 /* Heading + p - end */
 
 /* ---------------------------------------------------- */
@@ -82,6 +85,10 @@ a {
   color: rgb(54, 51, 51);
   text-decoration: none;
   font-variant: small-caps;
+}
+
+.no-caps {
+  font-variant: initial;
 }
 /* Links - end */
 
@@ -107,6 +114,7 @@ textarea {
   width: 90%;
   margin: 5px 0;
   display: block;
+  white-space: nowrap;
 }
 
 .input-inline {
@@ -164,6 +172,10 @@ button {
   background-color: rgb(113, 236, 113);
 }
 
+.buttonGrey {
+  background-color: #9597AA;
+}
+
 /* Buttons - end */
 
 /* ---------------------------------------------------- */
@@ -198,8 +210,8 @@ button {
   padding: 5px; 
   position: relative;
   margin: 0 14px 35px 0; 
-  width: 640px; 
-  /* hardcoded width.. width of the youtube player */
+  width: 600px; 
+  /* hardcoded width.. width of the youtube player - 40px */
   /* youtube player timeline has a margin of 12 on both sides */
 }
 
@@ -233,6 +245,17 @@ button {
 footer {
   padding: 10px 0;
   font-size: 80%;
-  
+  display: flex;
+  justify-content: center; 
+}
+
+footer p {
+  margin: 0;
+  line-height: 18px;
+}
+
+.logo-img {
+  height: 18px; 
+  margin-right: 6px;
 }
 /* Footer - end */

@@ -190,8 +190,9 @@ class EditElearning extends Component {
       });
   };
 
-  handleEditFormSubmit = e => { 
+  handleEditFormSubmit = e => {
     e.preventDefault();
+    console.log('handleEditForm' )
     this.ElearningService.editQuestion(this.state.id, this.state.currentQuestion)
       .then(elearningWithQuestions => {
         if (elearningWithQuestions.message) {
@@ -235,7 +236,7 @@ class EditElearning extends Component {
     }));
   };
 
-  deleteFakeAnswer = (e,index) => {
+  deleteFakeAnswer = (e, index) => {
     e.preventDefault();
     const updatedArray = [...this.state.currentQuestion.answerfakes];
     updatedArray.splice(index, 1);
@@ -258,13 +259,20 @@ class EditElearning extends Component {
 
   publishModule = (id, status) => {
     this.ElearningService.publishElearning(id, status)
-      .then(result => { 
+      .then(result => {
         this.setState({ elearning: result });
       })
       .catch(err => {
         console.log(err);
         this.setState({ error: "something went wrong" });
       });
+  };
+
+  cancelQuestion = () => {
+    this.setState({
+      changeQuestionStatus: null
+    });
+    this.player.playVideo();
   };
 
   render() {
@@ -320,9 +328,9 @@ class EditElearning extends Component {
             {/* start - Add or edit question - form */}
             {this.state.changeQuestionStatus &&
               (this.state.changeQuestionStatus === "new" ? (
-                <h2>Add new question</h2>
+                <h2>add new question</h2>
               ) : (
-                <h2>Edit question</h2>
+                <h2>edit question</h2>
               ))}
 
             {this.state.changeQuestionStatus && (
@@ -355,7 +363,7 @@ class EditElearning extends Component {
                 {this.state.currentQuestion.answerfakes &&
                   this.state.currentQuestion.answerfakes.map((answer, index) => (
                     <div key={index}>
-                      <button className="buttonOne buttonRed" onClick={(e) => this.deleteFakeAnswer(e,index)}>
+                      <button className="buttonOne buttonRed" onClick={e => this.deleteFakeAnswer(e, index)}>
                         x
                       </button>
                       <input
@@ -375,12 +383,16 @@ class EditElearning extends Component {
                   <button className="buttonOne buttonGreen" type="submit">
                     save question
                   </button>
-                {/* If edit , show delete question */}
-                {this.state.changeQuestionStatus === "edit" && (
-                  <button className="buttonOne buttonRed" onClick={this.deleteQuestion}>
-                    delete question
+                  {/* If edit , show delete question */}
+                  {this.state.changeQuestionStatus === "edit" && (
+                    <button type="button" className="buttonOne buttonRed" onClick={this.deleteQuestion}>
+                      delete question
+                    </button>
+                  )}
+                  {/* cancel button */}
+                  <button className="buttonOne buttonGrey" onClick={this.cancelQuestion}>
+                    cancel
                   </button>
-                )}
                 </div>
               </form>
             )}

@@ -6,9 +6,10 @@ class ElearningService {
     withCredentials: true
   });
 
-  getAll = page => {
+  getSix = (arrayLength, category) => {
+    console.log(arrayLength);
     return this.service
-      .get("/elearning")
+      .get(`/elearning/find/${arrayLength}/${category}`)
       .then(elearnings => {
         return elearnings.data;
       })
@@ -29,6 +30,17 @@ class ElearningService {
         return err.response.data;
       });
   };
+
+  getCategories = () => {
+    return this.service.get("/elearning/categories")
+    .then(result => { 
+      return result.data;
+    })
+    .catch(err => {
+      console.log(err);
+      return err.response.data;
+    });
+  }
 
   getYoutubeSnippetByUrl = url => {
     return this.service
@@ -122,6 +134,17 @@ class ElearningService {
 
   getOneElearningById = id => {
     return this.service.get(`/elearning/create/${id}`)
+      .then(elearning => { 
+        return elearning.data;
+      })
+      .catch(err => {
+        console.log(err);
+        return err.response.data;
+      });
+  }
+
+  playOneElearningById = id => {
+    return this.service.get(`/elearning/play/${id}`)
       .then(elearning => { 
         return elearning.data;
       })

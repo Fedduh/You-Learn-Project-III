@@ -3,15 +3,24 @@ const Schema = mongoose.Schema;
 
 const eLearningSchema = new Schema(
   {
+    status: String,
     title: { type: String, required: true },
-    creator: { type: String, required: true },
+    creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     youtube_url: { type: String, required: true },
     youtube_img: String,
     youtube_description: String,
     youtube_duration: Number,
+    youtube_duration_seconds: Number,
     youtube_category: String,
     // questions
-    questions: [{ timeStart: Number, question: String }]
+    questions: [
+      {
+        timeStart: { type: Number },
+        question: { type: String },
+        answer: { type: String },
+        answerfakes: { type: Array }
+      }
+    ]
   },
   {
     timestamps: {
