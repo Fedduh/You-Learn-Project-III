@@ -105,7 +105,8 @@ class EditElearning extends Component {
         question: "",
         answer: "",
         answerfakes: ["", "", ""]
-      }
+      },
+      showPreview: true
     }));
   };
 
@@ -191,8 +192,7 @@ class EditElearning extends Component {
   };
 
   handleEditFormSubmit = e => {
-    e.preventDefault();
-    console.log('handleEditForm' )
+    e.preventDefault(); 
     this.ElearningService.editQuestion(this.state.id, this.state.currentQuestion)
       .then(elearningWithQuestions => {
         if (elearningWithQuestions.message) {
@@ -313,11 +313,12 @@ class EditElearning extends Component {
             {/* end - show created questions */}
 
             {/* Button add question */}
-            <button className="buttonOne" onClick={this.createQuestion}>
+            <button className="buttonOne" type="button" onClick={this.createQuestion}>
               add question at current time
             </button>
             <button
               className="buttonOne buttonGreen"
+              type="button"
               onClick={() => this.publishModule(this.state.elearning._id, this.state.elearning.status)}
             >
               {this.state.elearning.status === "private"
@@ -364,7 +365,7 @@ class EditElearning extends Component {
                 {this.state.currentQuestion.answerfakes &&
                   this.state.currentQuestion.answerfakes.map((answer, index) => (
                     <div key={index}>
-                      <button className="buttonOne buttonRed" onClick={e => this.deleteFakeAnswer(e, index)}>
+                      <button className="buttonOne buttonRed" type="button" onClick={e => this.deleteFakeAnswer(e, index)}>
                         x
                       </button>
                       <input
@@ -378,7 +379,7 @@ class EditElearning extends Component {
                   ))}
                 {this.state.errorForm && <ErrorMessage error={this.state.errorForm} />}
                 <div>
-                  <button className="buttonOne" onClick={this.addFakeAnswer}>
+                  <button className="buttonOne" type="button" onClick={this.addFakeAnswer}>
                     add false answer option
                   </button>
                   <button className="buttonOne buttonGreen" type="submit">
@@ -391,7 +392,7 @@ class EditElearning extends Component {
                     </button>
                   )}
                   {/* cancel button */}
-                  <button className="buttonOne buttonGrey" onClick={this.cancelQuestion}>
+                  <button className="buttonOne buttonGrey" type="button" onClick={this.cancelQuestion}>
                     cancel
                   </button>
                 </div>

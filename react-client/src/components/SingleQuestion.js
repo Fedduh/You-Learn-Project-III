@@ -40,7 +40,7 @@ class SingleQuestion extends Component {
   // also needed for preview and save when editing questions (state is used)
   componentDidUpdate(prevProps) {
     // edit mode? no need to shuffle
-    if (this.props.currentQuestion !== prevProps.currentQuestion && this.props.mode === "edit") {
+    if (this.props.currentQuestion !== prevProps.currentQuestion && this.props.mode === "edit") { 
       this.setState({
         answerOptions: this.setAnswers()
       });

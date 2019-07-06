@@ -93,7 +93,7 @@ class ElearningService {
   }
 
   addQuestion = (id, questionObject) => {
-      return this.service.post(`elearning/create/${id}/addquestion`, {
+      return this.service.post(`/elearning/create/${id}/addquestion`, {
         questionObject
       })
       .then(status => {
@@ -106,7 +106,7 @@ class ElearningService {
   }
 
   editQuestion = (id, questionObject) => {
-    return this.service.post(`elearning/create/${id}/editquestion/${questionObject._id}`, {
+    return this.service.post(`/elearning/create/${id}/editquestion/${questionObject._id}`, {
       questionObject
     })
     .then(status => {
@@ -119,7 +119,7 @@ class ElearningService {
   }
 
   deleteQuestion = (id, questionObject) => {
-    return this.service.post(`elearning/create/${id}/deletequestion/${questionObject._id}`, {
+    return this.service.post(`/elearning/create/${id}/deletequestion/${questionObject._id}`, {
       questionObject
     })
     .then(status => {

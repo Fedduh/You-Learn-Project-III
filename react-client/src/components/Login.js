@@ -29,7 +29,7 @@ class Login extends Component {
     });
   };
 
-  showPassWordChange = () => { 
+  showPassWordChange = () => {
     var newState = this.state.showPassWord === "password" ? "text" : "password";
     this.setState({
       showPassWord: newState
@@ -65,12 +65,13 @@ class Login extends Component {
             onChange={this.changeHandler}
           />
 
-          <button className="buttonOne" type="submit">log in</button>
-        <button className="buttonOne" onClick={this.props.setNewUser}>register as new user</button>
+          <button className="buttonOne buttonGreen" type="submit">
+            log in
+          </button>
+          <button className="buttonOne" onClick={this.props.setNewUser}>
+            register as new user
+          </button>
         </form>
-        {/* <div className="buttonOne" onClick={this.props.setNewUser}>
-          New user?
-        </div> */}
       </div>
     );
   }

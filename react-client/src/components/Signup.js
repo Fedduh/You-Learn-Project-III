@@ -83,7 +83,7 @@ class Signup extends Component {
             value={this.state.email}
             onChange={this.changeHandler}
           />
-          <button className="buttonOne" type="submit">
+          <button className="buttonOne buttonGreen" type="submit">
             Sign up
           </button>
           <button className="buttonOne" onClick={this.props.setNewUser}>
