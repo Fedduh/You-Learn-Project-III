@@ -193,6 +193,10 @@ button {
 .delete-confirmation-div {
   margin-bottom: 30px;
 }
+
+.error-img {
+  width: 100%;
+}
 /* Errors - end */
 
 /* ---------------------------------------------------- */

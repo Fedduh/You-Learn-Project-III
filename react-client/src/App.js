@@ -8,6 +8,7 @@ import ElearningOverview from "./components/ElearningOverview";
 import CreateOverview from "./components/CreateOverview";
 import EditElearning from "./components/EditElearning";
 import PlayElearning from "./components/PlayElearning";
+import NotFound from "./components/NotFound";
 
 import { Switch, Route } from "react-router-dom";
 
@@ -46,7 +47,6 @@ class App extends Component {
   };
 
   logoutUser = () => {
-    console.log("app js logout user");
     this.setState({
       currentUser: null
     });
@@ -60,7 +60,7 @@ class App extends Component {
         {/* !! START CONTENT */}
         <div className="content">
           <Switch>
-            {/* Main content - signup / profile / overview */}
+            {/* Main content - signup / profile / overview / play / notfound */}
             <Route
               exact
               path="/"
@@ -110,6 +110,11 @@ class App extends Component {
               )}
             />
             {/* Play - end */}
+
+            {/* 404 - start*/}
+            <Route path="*" component={NotFound} />
+            {/* 404 - end*/}
+
           </Switch>
         </div>
         {/* !! END CONTENT */}
