@@ -14,7 +14,7 @@
     "uuid": "^3.3.2"
   }, 
   "scripts": {
-    "heroku-postbuild" : "cd react-client && npm i && npm run build",
+    "heroku-postbuild" : "cd react-client && npm install && npm run build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
