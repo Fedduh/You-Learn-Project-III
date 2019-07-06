@@ -49,7 +49,9 @@ app.use(cookieParser());
  
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
+app.use(express.static(path.join(__dirname, "react-client", "build")));
 app.use(express.static(path.join(__dirname, "public")));
+// path for the react-client public folder created by the build
 app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
 
 // default value for title local
