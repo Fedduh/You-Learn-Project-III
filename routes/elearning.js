@@ -13,6 +13,7 @@ const checkAutorization = (user, elearningID) => {
   const userID = user ? user._id : null;
   // check validity ID
   if (!mongoose.Types.ObjectId.isValid(elearningID)) {
+    console.log('eerste')
     return { code: 404, message: "elearning module not found" };
   }
   // check login status
@@ -24,6 +25,7 @@ const checkAutorization = (user, elearningID) => {
     try {
       let elearning = await Elearning.findById(elearningID);
       if (!elearning) {
+        console.log('tweede')
         return { code: 404, message: "elearning module not found" };
       }
       // objectId format. check match

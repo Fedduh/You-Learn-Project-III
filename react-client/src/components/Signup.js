@@ -25,8 +25,7 @@ class Signup extends Component {
 
   handleFormSubmit = e => {
     e.preventDefault();
-    this.authService.signup(this.state.username, this.state.password, this.state.email).then(response => {
-      console.log(response);
+    this.authService.signup(this.state.username, this.state.password, this.state.email).then(response => { 
       if (response.message) {
         this.setState({ error: response.message });
         return;

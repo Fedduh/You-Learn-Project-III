@@ -22,6 +22,18 @@ class UserService {
         return err.response.data;
       });
   };
+
+  getLatestModule = () => {
+    return this.service
+      .get(`/user/getlastmodule`)
+      .then(result => {
+        return result.data;
+      })
+      .catch(err => {
+        console.log(err);
+        return err.response.data;
+      });
+  };
 }
 
 export default UserService;

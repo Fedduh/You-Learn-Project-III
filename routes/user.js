@@ -74,4 +74,25 @@ router.post("/addanswer/:answerid", (req, res, next) => {
   addAnswerToUser();
 });
 
+// get last module from user
+router.get('/getlastmodule', (req, res, next) => {
+  if (!req.user) {
+    res.status(200).json(null);
+  }
+  User.findOne({_id: req.user._id}, {questionsAnswered: {$slice: -1}})
+    .populate('questionsAnswered.elearningid')
+    .then(elearning => {
+      if(elearning.questionsAnswered.length === 0) {
+        res.status(200).json(null);
+        return;
+      }
+      // return populated elearning id
+      res.status(200).json(elearning.questionsAnswered[0].elearningid);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(null)
+    })
+})
+
 module.exports = router;

@@ -5,6 +5,10 @@
   justify-content: space-around;
 }
 
+#profile-latest {
+  justify-content: left;
+}
+
 .Elearning-overview-module {
   /* background-color: teal; */
   margin: 10px;

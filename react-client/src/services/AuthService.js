@@ -14,7 +14,6 @@ class AuthService {
         email: email
       })
       .then(response => {
-        // console.log("response is" , response);
         return response.data;
       })
       .catch(err => {
@@ -37,20 +36,21 @@ class AuthService {
   };
 
   isLoggedIn = () => {
-    return this.service.get("/auth/isloggedin").then(response => {
-      console.log('user is logged in');
-      return response.data;
-    })
-    .catch(err => {
-      console.log(err.response.data); 
-    });
+    return this.service
+      .get("/auth/isloggedin")
+      .then(response => {
+        return response.data;
+      })
+      .catch(err => {
+        console.log(err.response.data);
+      });
   };
 
   logout = () => {
     return this.service.get("/auth/logout").then(response => {
-      console.log(response.data); 
-    })
-  }
+      console.log(response.data);
+    });
+  };
 }
 
 export default AuthService;

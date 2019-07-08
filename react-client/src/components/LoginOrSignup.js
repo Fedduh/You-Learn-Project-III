@@ -7,8 +7,7 @@ class LoginOrSignup extends Component {
     newUser: false
   };
 
-  setNewUser = () => {
-    console.log('ok')
+  setNewUser = () => { 
     const newState = this.state.newUser ? false : true;
     this.setState({
       newUser: newState
