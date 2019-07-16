@@ -9,7 +9,7 @@
     "dev-windows": "nodemon ./bin/www"
   },
   "dependencies": {
-    "@casl/ability": "^3.1.1",
+    "@casl/ability": "^3.1.2",
     "@casl/mongoose": "^2.3.1",
     "axios": "^0.19.0",
     "bcrypt": "^3.0.0",
@@ -23,7 +23,7 @@
     "express": "^4.16.3",
     "express-session": "^1.16.2",
     "hbs": ">=4.0.1",
-    "mongoose": "^5.6.3",
+    "mongoose": "^5.6.4",
     "morgan": "^1.9.0",
     "node-sass-middleware": "^0.11.0",
     "passport": "^0.4.0",
